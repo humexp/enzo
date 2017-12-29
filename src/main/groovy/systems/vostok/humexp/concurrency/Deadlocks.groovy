@@ -1,26 +1,16 @@
 package systems.vostok.humexp.concurrency
 
+import groovy.util.logging.Slf4j
+
+@Slf4j
 class Deadlocks {
     static void main(String[] args) {
-        DeadlockExecutor deadlockExecutor = new DeadlockExecutor()
+        new DeadlockExecutor()
+                .with { executor -> new Thread[6].collect { new Thread(executor) } }
+                .each { it.start() }
+                .each { it.join() }
 
-        Thread first = new Thread(deadlockExecutor)
-        Thread second = new Thread(deadlockExecutor)
-        Thread third = new Thread(deadlockExecutor)
-        Thread forth = new Thread(deadlockExecutor)
-
-        first.start()
-        second.start()
-        third.start()
-        forth.start()
-
-        first.join()
-        second.join()
-        third.join()
-        forth.join()
-
-        println Balls.counter
-        println Runs.counter
+        [Balls, Runs].each { log.info(it.counter as String) }
     }
 }
 
@@ -51,11 +41,15 @@ class DeadlockExecutor implements Runnable {
     }
 }
 
-class Balls {
+interface Inventar {
+
+}
+
+class Balls implements Inventar {
     static int counter
 }
 
-class Runs {
+class Runs implements Inventar {
     static int counter
 }
 
