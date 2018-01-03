@@ -29,8 +29,8 @@ class CallableFuture implements Callable<String> {
 class  CallableExecutor {
     static void main(String[] args) {
         long beforeTime = System.currentTimeMillis()
-        // println new CallableExecutor().executeSynk(0..100)   // execution time 10: 5710 sum: 55 // 100: 50833 sum: 5050
-        println new CallableExecutor().executeAsynk(0..10)  // execution time 10: 3694 sum: 55  //
+        println new CallableExecutor().executeSynk(0..100)   // execution time 10: 5710 sum: 55 // 100: 50833 sum: 5050 // not recreate thread pool: 136
+        // println new CallableExecutor().executeAsynk(0..100)  // execution time 10: 2231 sum: 55  // 100: 7325 sum 5050 // not recreate thread pool: 197
         println  (System.currentTimeMillis() - beforeTime)
     }
 
@@ -45,29 +45,39 @@ class  CallableExecutor {
         sum
     }
 
+
     int executeAsynk(List numbers) {
         ExecutorService executorService = Executors.newFixedThreadPool(10)
+
+        int result = calculateAsynch(numbers, executorService)
+        executorService.shutdown()
+        result
+    }
+
+    int calculateAsynch(List numbers, ExecutorService executorService) {
         int previous = 0
         int numSize = numbers.size()
 
-        Integer sum = numbers.indexed(1)
+        List sumList = numbers.indexed(1)
                 .collect { index, item ->
-                            if (index%2==0) {
-                                return executorService.submit(new CallableFuture(previous, item))
-                            }
-                            previous = item as Integer
-                            index == numSize ? item : null
-                }.findAll { it }
+            if (index%2==0) {
+                return executorService.submit(new CallableFuture(previous, item))
+            }
+            previous = item as Integer
+            index == numSize ? item : null
+        }.findAll { it }
                 .collect {
-                            if(it instanceof Future) {
-                                it.get()
-                            } else {
-                                it
-                            }
-                }.inject(0) { result, i ->
-                             executorService.submit(new CallableFuture(result as Integer, i as Integer)).get() } as Integer
+            if(it instanceof Future) {
+                it.get() as Integer
+            } else {
+                it
+            }
+        }
 
-        executorService.shutdown()
-        sum
+        if (sumList.size() == 1) {
+            return sumList.first()
+        } else {
+            return executeAsynk(sumList)
+        }
     }
 }
