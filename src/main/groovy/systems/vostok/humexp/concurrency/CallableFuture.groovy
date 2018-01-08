@@ -19,8 +19,8 @@ class CallableFuture implements Callable<String> {
 
     @Override
     String call() throws Exception {
-        log.info a as String
-        sleep(500)
+        //log.info a as String
+        //sleep(500)
         a + b
     }
 }
@@ -29,13 +29,13 @@ class CallableFuture implements Callable<String> {
 class  CallableExecutor {
     static void main(String[] args) {
         long beforeTime = System.currentTimeMillis()
-        println new CallableExecutor().executeSynk(0..100)   // execution time 10: 5710 sum: 55 // 100: 50833 sum: 5050 // not recreate thread pool: 136
-        // println new CallableExecutor().executeAsynk(0..100)  // execution time 10: 2231 sum: 55  // 100: 7325 sum 5050 // not recreate thread pool: 197
+        println new CallableExecutor().executeSynch(0..1_000_000)   //
+        // println new CallableExecutor().executeAsynch(0..10_000_000)  // out of memory
         println  (System.currentTimeMillis() - beforeTime)
     }
 
-    int executeSynk(List numbers) {
-        ExecutorService executorService = Executors.newFixedThreadPool(10)
+    int executeSynch(List numbers) {
+        ExecutorService executorService = Executors.newFixedThreadPool(1)
 
         def sum = numbers.inject(0) { result, i ->
             executorService.submit(new CallableFuture(result as Integer, i as Integer)).get()
@@ -46,7 +46,7 @@ class  CallableExecutor {
     }
 
 
-    int executeAsynk(List numbers) {
+    int executeAsynch(List numbers) {
         ExecutorService executorService = Executors.newFixedThreadPool(10)
 
         int result = calculateAsynch(numbers, executorService)
@@ -59,14 +59,14 @@ class  CallableExecutor {
         int numSize = numbers.size()
 
         List sumList = numbers.indexed(1)
-                .collect { index, item ->
+        .collect { index, item ->
             if (index%2==0) {
                 return executorService.submit(new CallableFuture(previous, item))
             }
             previous = item as Integer
             index == numSize ? item : null
         }.findAll { it }
-                .collect {
+        .collect {
             if(it instanceof Future) {
                 it.get() as Integer
             } else {
@@ -77,7 +77,7 @@ class  CallableExecutor {
         if (sumList.size() == 1) {
             return sumList.first()
         } else {
-            return executeAsynk(sumList)
+            return executeAsynch(sumList)
         }
     }
 }
