@@ -2,10 +2,6 @@ package systems.vostok.humexp.concurrency
 
 import groovy.util.logging.Slf4j
 
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-
-
 @Slf4j
 class ExecutorServiceForRunnable implements Runnable {
     @Override
