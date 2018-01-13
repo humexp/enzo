@@ -23,7 +23,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
     @Override
     public CassandraClusterFactoryBean cluster() {
         CassandraClusterFactoryBean cluster = new CassandraClusterFactoryBean();
-        cluster.setContactPoints("localhost");
+        cluster.setContactPoints("192.168.99.100");
         cluster.setPort(9042);
         cluster.setKeyspaceCreations(
         		Arrays.asList(
