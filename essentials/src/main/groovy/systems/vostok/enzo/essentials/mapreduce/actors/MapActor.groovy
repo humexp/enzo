@@ -1,5 +1,6 @@
 package systems.vostok.enzo.essentials.mapreduce.actors
 
+import akka.actor.ActorRef
 import akka.actor.UntypedActor
 import systems.vostok.enzo.essentials.mapreduce.messages.MapData
 import systems.vostok.enzo.essentials.mapreduce.messages.WordCount
@@ -15,7 +16,7 @@ public class MapActor extends UntypedActor {
         if (message instanceof String) {
             String work = (String) message;
 // map the words in the sentence and send the result to MasterActor
-            getSender().tell(evaluateExpression(work));
+            getSender().tell(evaluateExpression(work), ActorRef.noSender());
         } else
             unhandled(message);
     }

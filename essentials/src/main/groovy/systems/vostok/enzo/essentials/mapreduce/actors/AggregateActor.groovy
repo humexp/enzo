@@ -1,5 +1,6 @@
 package systems.vostok.enzo.essentials.mapreduce.actors
 
+import akka.actor.ActorRef
 import akka.actor.UntypedActor
 import systems.vostok.enzo.essentials.mapreduce.messages.ReduceData
 import systems.vostok.enzo.essentials.mapreduce.messages.Result
@@ -16,7 +17,7 @@ class AggregateActor extends UntypedActor {
             aggregateInMemoryReduce(reduceData.
                     getReduceDataList())
         } else if (message instanceof Result) {
-            getSender().tell(finalReducedMap.toString())
+            getSender().tell(finalReducedMap.toString(), ActorRef.noSender())
         } else
             unhandled(message)
     }

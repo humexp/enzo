@@ -15,7 +15,7 @@ class MasterActor extends AbstractActor {
     ActorRef aggregateActor = getContext().actorOf(Props.create(AggregateActor.class), 'aggregate')
 
     @Override
-    Receive createReceive() {
+    AbstractActor.Receive createReceive() {
         return receiveBuilder()
                 .match(String.class, { mapActor.tell(it, getSelf()) })
                 .match(MapData.class, { reduceActor.tell(it, getSelf()) })

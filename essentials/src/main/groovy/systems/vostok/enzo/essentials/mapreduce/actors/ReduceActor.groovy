@@ -1,5 +1,6 @@
 package systems.vostok.enzo.essentials.mapreduce.actors
 
+import akka.actor.ActorRef
 import akka.actor.UntypedActor
 import systems.vostok.enzo.essentials.mapreduce.messages.MapData
 import systems.vostok.enzo.essentials.mapreduce.messages.ReduceData
@@ -12,7 +13,7 @@ class ReduceActor extends UntypedActor {
             MapData mapData = (MapData) message
 // reduce the incoming data and forward the result to Master actor
 
-            getSender().tell(reduce(mapData.getDataList()))
+            getSender().tell(reduce(mapData.getDataList()), ActorRef.noSender())
         } else
             unhandled(message)
     }
