@@ -9,7 +9,6 @@ import systems.vostok.enzo.essentials.mapreduce.messages.ReduceData
 import systems.vostok.enzo.essentials.mapreduce.messages.Result
 
 class MasterActor extends AbstractActor {
-
     ActorRef mapActor = getContext().actorOf(Props.create(MapActor.class).withRouter(new RoundRobinPool(5)), 'map')
     ActorRef reduceActor = getContext().actorOf(Props.create(ReduceActor.class).withRouter(new RoundRobinPool(5)), 'reduce')
     ActorRef aggregateActor = getContext().actorOf(Props.create(AggregateActor.class), 'aggregate')

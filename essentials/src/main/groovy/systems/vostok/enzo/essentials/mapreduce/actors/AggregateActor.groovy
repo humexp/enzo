@@ -9,7 +9,7 @@ class AggregateActor extends AbstractActor {
     private Map<String, Integer> finalReducedMap = new HashMap<>()
 
     @Override
-    Receive createReceive() {
+    AbstractActor.Receive createReceive() {
         receiveBuilder()
                 .match(ReduceData.class, { aggregateInMemoryReduce(it.reduceDataList) })
                 .match(Result.class, { getSender().tell(finalReducedMap.toString(), ActorRef.noSender()) })

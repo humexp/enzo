@@ -6,7 +6,6 @@ import systems.vostok.enzo.essentials.mapreduce.messages.MapData
 import systems.vostok.enzo.essentials.mapreduce.messages.WordCount
 
 class MapActor extends AbstractActor {
-
     final List<String> STOP_WORDS_LIST = ['a', 'am', 'an', 'and', 'are', 'as',
                                           'at', 'be', 'do', 'go', 'if', 'in',
                                           'is', 'it', 'of', 'on', 'the', 'to']
