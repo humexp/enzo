@@ -3,29 +3,17 @@ package systems.vostok.enzo.essentials.mapreduce.actors
 import akka.actor.AbstractActor
 import akka.actor.ActorRef
 import akka.actor.Props
-import akka.routing.RoundRobinRouter
+import akka.routing.RoundRobinPool
 import systems.vostok.enzo.essentials.mapreduce.messages.MapData
 import systems.vostok.enzo.essentials.mapreduce.messages.ReduceData
 import systems.vostok.enzo.essentials.mapreduce.messages.Result
 
 class MasterActor extends AbstractActor {
 
+    ActorRef mapActor = getContext().actorOf(Props.create(MapActor.class).withRouter(new RoundRobinPool(5)), 'map')
+    ActorRef reduceActor = getContext().actorOf(Props.create(ReduceActor.class).withRouter(new RoundRobinPool(5)), 'reduce')
+    ActorRef aggregateActor = getContext().actorOf(Props.create(AggregateActor.class), 'aggregate')
 
-
-
-
-    //TODO: Implement routers
-    ActorRef mapActor = getContext().actorOf(
-            new Props(MapActor.class).withRouter(new
-                    RoundRobinRouter(5)), "map");
-    ActorRef reduceActor = getContext().actorOf(
-            new Props(ReduceActor.class).withRouter(new
-                    RoundRobinRouter(5)), "reduce");
-    ActorRef aggregateActor = getContext().actorOf(
-            new Props(AggregateActor.class), "aggregate");
-
-
-    //TODO: Research forward
     @Override
     Receive createReceive() {
         return receiveBuilder()
