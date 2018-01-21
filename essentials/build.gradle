@@ -6,10 +6,17 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    maven {
+        url 'http://repo.typesafe.com/typesafe/maven-releases/'
+    }
 }
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
-    compile 'com.typesafe.akka:akka-actor_2.12:2.5.9'
+
+    // TODO: Update to 2.5.9
+    compile group: 'com.typesafe.akka', name: 'akka-actor', version: '2.0.3'
+    // compile 'com.typesafe.akka:akka-actor_2.12:2.5.9'
+
 
 }
