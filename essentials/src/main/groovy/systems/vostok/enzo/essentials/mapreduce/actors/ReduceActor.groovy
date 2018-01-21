@@ -17,12 +17,10 @@ class ReduceActor extends UntypedActor {
             unhandled(message)
     }
     private ReduceData reduce(List<WordCount> dataList) {
-        HashMap<String, Integer> reducedMap = new HashMap<String,
-                Integer>()
+        HashMap<String, Integer> reducedMap = new HashMap<String, Integer>()
         for (WordCount wordCount : dataList) {
             if (reducedMap.containsKey(wordCount.getWord())) {
-                Integer value = (Integer)
-                reducedMap.get(wordCount.getWord())
+                Integer value = (Integer)reducedMap.get(wordCount.getWord())
                 value++
                 reducedMap.put(wordCount.getWord(), value)
             } else {
